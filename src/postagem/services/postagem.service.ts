@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Body, HttpCode, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Postagem } from "../entities/postagem.entity";
 import { ILike, Repository } from "typeorm";
@@ -17,7 +17,12 @@ export class PostagemService{
 
     async findAll(): Promise<Postagem[]>{
         //SELECT * FROM tb_postagens;
-        return this.postagemRepository.find();
+        return this.postagemRepository.find({
+            relations:{ //relacionamento com tema
+                tema: true
+            }
+        });
+        
     }
 
     async findById(id:number): Promise<Postagem>{
@@ -25,8 +30,12 @@ export class PostagemService{
         const postagem = await this.postagemRepository.findOne({
             where : {
                 id
+            },
+            relations:{
+                tema: true
             }
-     })
+
+        })
 
      if (!postagem)
         throw new HttpException('Postagem não encontrada!', HttpStatus.NOT_FOUND)
@@ -38,6 +47,9 @@ export class PostagemService{
         return this.postagemRepository.find({
             where:{
                 titulo: ILike(`%${titulo}%`)//Ilike é para ignorar maiusculo e minusculo
+            },
+              relations:{
+                tema: true
             }
         })
     }
@@ -63,4 +75,6 @@ export class PostagemService{
         //DELETE tb_postagens FROM id = ?
         return this.postagemRepository.delete(id);
     }
+
+    
 }
