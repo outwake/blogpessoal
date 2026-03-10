@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Postagem } from "../entities/postagem.entity";
 import { ILike, Repository } from "typeorm";
 import { DeleteResult } from "typeorm/browser";
+import { TemaService } from "../../tema/services/tema.service";
 
 
 
@@ -13,13 +14,15 @@ export class PostagemService{
     constructor(
         @InjectRepository(Postagem)
         private postagemRepository: Repository<Postagem>,
+        private readonly temaService: TemaService
     ){}
 
     async findAll(): Promise<Postagem[]>{
         //SELECT * FROM tb_postagens;
         return this.postagemRepository.find({
             relations:{ //relacionamento com tema
-                tema: true
+                tema: true,
+                usuario: true
             }
         });
         
@@ -32,7 +35,8 @@ export class PostagemService{
                 id
             },
             relations:{
-                tema: true
+                tema: true,
+                usuario: true
             }
 
         })
@@ -49,12 +53,14 @@ export class PostagemService{
                 titulo: ILike(`%${titulo}%`)//Ilike é para ignorar maiusculo e minusculo
             },
               relations:{
-                tema: true
+                tema: true,
+                usuario: true
             }
         })
     }
 
     async create(postagem: Postagem): Promise<Postagem>{
+        await this.temaService.findById(postagem.tema.id);//Para validar que o nome existe ou não
         //INSERT INTO tb_postagens ( titulo, texto) VALUE(? , ?)
         return await this.postagemRepository.save(postagem);
 
@@ -63,8 +69,13 @@ export class PostagemService{
      async update(postagem: Postagem): Promise<Postagem>{
         if(!postagem.id || postagem.id <= 0)
             throw new HttpException("O Id da postagem é inválido!!", HttpStatus.BAD_REQUEST);
-
+        //Checa se a Postagem existe
         await this.findById(postagem.id);
+
+        //Checa se o Tema da Postagem existe
+        await this.temaService.findById(postagem.tema.id);
+
+        
         //UPDATE tb_postagens SET  titulo? , texto = ?. data= CURRENT_TIMESTAMP() WHERE id = ?;
         return await this.postagemRepository.save(postagem);
 
