@@ -87,5 +87,5 @@ export class PostagemService{
         return this.postagemRepository.delete(id);
     }
 
-    
+   
 }
