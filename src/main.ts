@@ -4,7 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-
+  //Configuração do Swagger
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
   .setTitle('Blog Pessoal')
@@ -16,7 +16,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);
   
-  
+  //Porta do localhost
   process.env.TZ = '-3:00';
 
   app.useGlobalPipes(new ValidationPipe());

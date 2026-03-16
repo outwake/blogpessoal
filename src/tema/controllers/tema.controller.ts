@@ -39,7 +39,7 @@ export class TemaController{
 
     //Criar Tema
     @Post()
-    @HttpCode(HttpStatus.OK)
+    @HttpCode(HttpStatus.CREATED)
     create(@Body() tema: Tema): Promise<Tema>{
         return this.temaService.update(tema);
     }

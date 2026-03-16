@@ -37,6 +37,7 @@ describe('Testes dos Módulos Usuário e Auth (e2e)', () => {
    await app.close();
   })
 
+
   it('01 Deve cadastrar um novo usuario', async() => {
     const resposta = await request(app.getHttpServer())
     .post('/usuarios/cadastrar')
@@ -52,6 +53,7 @@ describe('Testes dos Módulos Usuário e Auth (e2e)', () => {
     usuarioId = resposta.body.id;
   });
 
+
   it('02 Não deve cadastrar um usuario repetido', async() => {
     const resposta = await request(app.getHttpServer())
     .post('/usuarios/cadastrar')
@@ -66,6 +68,7 @@ describe('Testes dos Módulos Usuário e Auth (e2e)', () => {
     
   });
 
+
   it('03 Deve Autenticar um usuário cadastrado', async() => {
     const resposta = await request(app.getHttpServer())
     .post('/usuarios/logar')
@@ -78,6 +81,7 @@ describe('Testes dos Módulos Usuário e Auth (e2e)', () => {
     token = resposta.body.token;
   });
 
+
   it('04 Listar todos', async() => {
     const resposta = await request(app.getHttpServer())
     .get('/usuarios/all')
@@ -85,6 +89,7 @@ describe('Testes dos Módulos Usuário e Auth (e2e)', () => {
     .expect(200);
 
   });
+
 
   it('05 Deve atualizar usuário já existente', async() => {
     const resposta = await request(app.getHttpServer())
@@ -100,6 +105,7 @@ describe('Testes dos Módulos Usuário e Auth (e2e)', () => {
     .expect(200);
   });
 
+
    it('06 Listar por ID', async() => {
     const resposta = await request(app.getHttpServer())
     .get(`/usuarios/${usuarioId}`)
@@ -110,6 +116,7 @@ describe('Testes dos Módulos Usuário e Auth (e2e)', () => {
 
   });
 
+  
   it('07 Não achar por ID', async() => {
     const resposta = await request(app.getHttpServer())
     .get('/usuarios/99999')
