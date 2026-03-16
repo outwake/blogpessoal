@@ -41,7 +41,7 @@ export class TemaController{
     @Post()
     @HttpCode(HttpStatus.CREATED)
     create(@Body() tema: Tema): Promise<Tema>{
-        return this.temaService.update(tema);
+        return this.temaService.create(tema);
     }
 
     //Atualizar o tema
